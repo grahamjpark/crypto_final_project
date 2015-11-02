@@ -13,7 +13,10 @@ CS 355 Final Project
 - [ ] Other things (45pts)
 
 ##Information
-https://www.cs.purdue.edu/homes/jiang97/CS355Project_modified.pdf
+
+- [Project Slides](https://www.cs.purdue.edu/homes/jiang97/CS355Project_modified.pdf)
+- [Homework (look at Q4)](https://www.cs.purdue.edu/homes/mja/hwks/hwk2.pdf)
+- [Homework Solution](https://www.cs.purdue.edu/homes/mja/hwks/2sol.pdf)
 
 ##Dates
 - Nov. 23: Submit to TA by email 
