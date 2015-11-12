@@ -2,7 +2,8 @@
 CS 355 Final Project
 
 ##Things to Get Done
-- [ ] Set up python stuff
+- [x] Set up python stuff
+- 
 
 ##Grade
 - [ ] Sockets (20pts)
