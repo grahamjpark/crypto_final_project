@@ -3,10 +3,12 @@ CS 355 Final Project
 
 ##Things to Get Done
 - [x] Set up python stuff
-- 
+- [x] Set up sockets
+- [ ] Set up hash functions
+- [ ] Set up bit commitment
 
 ##Grade
-- [ ] Sockets (20pts)
+- [x] Sockets (20pts)
 - [ ] Commitment (20pts)
 - [ ] Random gen (5pts)
 - [ ] Multiple runs (5pts)
