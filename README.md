@@ -5,6 +5,7 @@ CS 355 Final Project
 - [x] Set up python stuff
 - [x] Set up sockets
 - [ ] Set up hash functions
+- [ ] Try to make da best random numbers??
 - [ ] Set up bit commitment
 
 ##Grade
