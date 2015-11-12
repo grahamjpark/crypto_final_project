@@ -4,9 +4,9 @@ CS 355 Final Project
 ##Things to Get Done
 - [x] Set up python stuff
 - [x] Set up sockets
-- [ ] Set up hash functions
-- [ ] Try to make da best random numbers??
-- [ ] Set up bit commitment
+- [x] Set up hash functions
+- [x] Try to make da best random numbers
+- [ ] Set up bit commitment (communication between two programs)
 
 ##Grade
 - [x] Sockets (20pts)
