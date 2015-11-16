@@ -9,6 +9,8 @@ CS 355 Final Project
 - [ ] Set up bit commitment (communication between two programs)
 
 ##Grade
+
+
 - [x] Sockets (20pts)
 - [ ] Commitment (20pts)
 - [ ] Random gen (5pts)
