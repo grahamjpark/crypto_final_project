@@ -13,7 +13,7 @@ CS 355 Final Project
 
 - [x] Sockets (20pts)
 - [ ] Commitment (20pts)
-- [ ] Random gen (5pts)
+- [x] Random gen (5pts)
 - [ ] Multiple runs (5pts)
 - [ ] Different graph sizes (5pts)
 - [ ] Other things (45pts)
