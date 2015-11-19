@@ -12,6 +12,7 @@ __rand = ""
 __hash = ""
 __bit = 0
 __flipped = 0
+__commitBit = -1
 
 def flipCoin():
 	#Uses OS to generate 124 bit random, then converts it to hexadecimal string
@@ -59,3 +60,13 @@ def getBit():
 def setHash(hash):
 	global __hash
 	__hash = hash
+
+def getCommitBit():
+	global __commitBit
+	if __commitBit == -1:
+		__commitBit = random.sample(range(0,2), 1)[0] 
+
+	return __commitBit
+
+def getBitFromRandom(random):
+	return ord(rand[0:1]) % 2

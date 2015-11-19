@@ -23,14 +23,21 @@ conn.connect((host, port))
 recieved = conn.recv(1024)
 
 while recieved:
+	# The request will be broken up by new lines
 	requestParts = recieved.split('\n')
 
+	# Each newline will be more specific to which part of the program it is
 	if 'COINFLIP-PROCESS' in requestParts[0]:
 		if 'HASH' in requestParts[1]:
+			# If its a hash that's been sent, calls setHash from flipCoin.py
 			setHash(requestParts[2])
-			commitBit = random.sample(range(0,2), 1)[0] 
+
+			# Picks a guess at whether it's odd or even and sends it
+			commitBit = getCommitBit()
 			conn.send("COINFLIP-PROCESS\nCOMMITMENT\n" + str(commitBit))
-		
+		if 'RANDOM-NUMBER' in requestParts[1]:
+			bit = getBitFromRandom(requestParts[2])
+			result = bit == getCommitBit()
 
 
 
