@@ -1,10 +1,8 @@
 import socket               # Import socket module
 import string
 import random
+from flipCoin import *
 
-recvHash = ""
-recvNum = ""
-commitBit = random.sample(range(0,2), 1)[0] 
 
 def checkHash():
 	#Sets up the hash function
@@ -25,9 +23,30 @@ conn.connect((host, port))
 recieved = conn.recv(1024)
 
 while recieved:
-	if 'Random Hash: ' in recieved:
-		recvHash = recieved[13, recieved.__len__()] #TODO: Check for off by one
-		conn.send("Commitment: " + str(commitBit)
+	requestParts = recieved.split('\n')
+
+	if 'COINFLIP-PROCESS' in requestParts[0]:
+		if 'HASH' in requestParts[1]:
+			setHash(requestParts[2])
+			commitBit = random.sample(range(0,2), 1)[0] 
+			conn.send("COINFLIP-PROCESS\nCOMMITMENT\n" + str(commitBit))
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	else if 'Random Number: ' in recieved:
 		if not recvHash:
 			#ERROR

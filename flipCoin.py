@@ -48,13 +48,14 @@ def getRandom():
 		return -1
 
 def getHash():
-	if __flipped:
-		return __hash
-	else:
-		return -1
+	return __hash
 
 def getBit():
 	if __flipped:
 		return __bit
 	else:
 		return -1
+
+def setHash(hash):
+	global __hash
+	__hash = hash
