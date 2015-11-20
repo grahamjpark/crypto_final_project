@@ -60,6 +60,42 @@ def removeNode(matrix, index):
         matrix[index,i] = -1;
     return matrix;
 
+def commit(matrix):
+    return matrix;
+
+def peggyRound(gone, gtwo, beta, coinflip):
+    betaMatrix = numpy.matrix(beta);
+    n = len(gone);
+    alpha = generateIsomorphismDefinition(n);
+    alphaMatrix = getIsomorphismDefinitionMatrix(alpha);
+    q = getIsomorphism(gtwo, alphaMatrix);
+    #send commit(q);
+    pi = numpy.matrix(alphaMatrix) * numpy.matrix(betaMatrix);
+    qprime = getIsomorphism(gone, pi);
+    print "~alpha:";
+    print alpha;
+    print "~beta:";
+    print beta;
+    print "~pi:";
+    print pi;
+    print "~q:";
+    print q;
+    print "~qprime:";
+    print qprime;
+    if (coinflip == 0):
+        return (alpha, q);
+    return (pi, qprime);
+
+def victorRound(gone, gtwo, isomorphism, matrix, commitment, coinflip):
+    #check matrix is same as commit
+    #commit(matrix) == commitment
+    if (coinflip == 0):
+        q = getIsomorphism(gtwo, isomorphism);
+        return (numpy.q == numpy.matrix).all();
+    #check matrix is part of q (commitment)
+    qprime = getIsomorphism(gone, isomorphism);
+    return (numpy.qprime == numpy.matrix).all();
+
 #tests matrix file reading
 def getMatrixTest():
     filename = sys.argv[1];
@@ -83,8 +119,21 @@ def getIsomorphismTest():
     print matrix;
     print isomorphism;
 
+def roundTest():
+    matrix = getMatrixFromFile(sys.argv[1]);
+    submatrix = getMatrixFromFile(sys.argv[2]);
+    betaMatrix = getMatrixFromFile(sys.argv[3]);
+#    n = len(matrix);
+#    beta = generateIsomorphismDefinition(n);
+    print "Round 0";
+    peggyRound(matrix, submatrix, betaMatrix, 0);
+    print "Round 1";
+    peggyRound(matrix, submatrix, betaMatrix, 1);
+
 print "Matrix tests";
 getMatrixTest();
 print "Isomorphism tests";
 getIsomorphismTest();
+print "Round tests";
+roundTest();
 
