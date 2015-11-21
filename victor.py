@@ -22,6 +22,7 @@ port = 12346                # Reserve a port for your service.
 conn.connect((host, port))
 recieved = conn.recv(1024)
 
+
 while recieved:
 	# The request will be broken up by new lines
 	requestParts = recieved.split('\n')
@@ -37,33 +38,6 @@ while recieved:
 			conn.send("COINFLIP-PROCESS\nCOMMITMENT\n" + str(commitBit))
 		if 'RANDOM-NUMBER' in requestParts[1]:
 			bit = getBitFromRandom(requestParts[2])
-			result = bit == getCommitBit()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	else if 'Random Number: ' in recieved:
-		if not recvHash:
-			#ERROR
-			print "Error: Number was recieved but hash is null"
-		else:
-			recvNum = [15, recieved.__len__()]
-			checkHash()
-
-
-
-
+			result = bit == getCommitBit() #This conditional might now work
 print s.recv(1024)
 s.close                     # Close the socket when done

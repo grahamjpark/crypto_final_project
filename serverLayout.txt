@@ -1,0 +1,31 @@
+The first line is the major group, the second is the specific step, and the third is the data.
+Split the recieved data on \n
+EXAMPLE PACKET:
+COINFLIP-PROCESS
+HASH
+a365es4
+END EXAMPLE
+
+
+
+Things with 'COINFLIP-PROCESS' as the first line
+	Victor (Server):
+		Generate random number
+		Hash random number
+		SEND LINE 2: 'HASH'
+			Send the hash
+		RECIEVE LINE 2: 'BIT-GUESS'
+		SEND LINE 2: 'RANDOM-NUMBER'
+			The random number
+		Compare to see if the guess was right, if guess is right it challenge is 1
+	
+	Peggy (Client):
+		RECIEVE LINE 2: 'HASH'
+			Store the hash for later
+		generate random 1 or 0
+		SEND LINE 2: 'BIT-GUESS'
+			send the random
+		RECIEVE LINE 2: 'RANDOM-NUMBER'
+			Hashes the number and makes sure it's the same as what was earlier recieved
+		Figure out whether it's odd
+		Compare to see if the guess was right, if guess is right it challenge is 1
