@@ -3,6 +3,10 @@
 import random;
 import numpy;
 import sys;
+import hashlib;
+import binascii;
+import random;
+import os;
 
 #args: String filename
 #return: 2d int array adjacency matrix
@@ -60,41 +64,82 @@ def removeNode(matrix, index):
         matrix[index,i] = -1;
     return matrix;
 
-def commit(matrix):
-    return matrix;
+def generateRandoms():
+    rand1 = binascii.hexlify(os.urandom(16));
+    rand2 = binascii.hexlify(os.urandom(16));
+    return (rand1, rand2);
 
-def peggyRound(gone, gtwo, beta, coinflip):
+def commit(matrix):
+    n = len(matrix);
+    randomones = [["" for i in range(n)] for i in range(n)];
+    randomtwos = [["" for i in range(n)] for i in range(n)];
+    hashed = [["" for i in range(n)] for i in range(n)];
+    for i in range(n):
+        for j in range(n):
+            rand1, rand2 = generateRandoms();
+            randomones[i][j] = rand1;
+            randomtwos[i][j] = rand2;
+            hashed[i][j] = hashelement(rand1 + rand2 + str(matrix[i, j]));
+    return hashed, randomones, randomtwos;
+
+def hashelement(string):
+    m = hashlib.md5();
+    m.update(string);
+    hashstring = binascii.hexlify(m.digest());
+    return hashstring;
+
+def peggyRoundOne(gone, gtwo, beta):
     betaMatrix = numpy.matrix(beta);
     n = len(gone);
     alpha = generateIsomorphismDefinition(n);
     alphaMatrix = getIsomorphismDefinitionMatrix(alpha);
     q = getIsomorphism(gtwo, alphaMatrix);
-    #send commit(q);
+    hashed, randomones, randomtwos = commit(q);
+    #TODO: send(hashed, randomones);#this is the commitment
     pi = numpy.matrix(alphaMatrix) * numpy.matrix(betaMatrix);
     qprime = getIsomorphism(gone, pi);
-    print "~alpha:";
-    print alpha;
-    print "~beta:";
-    print beta;
-    print "~pi:";
-    print pi;
-    print "~q:";
-    print q;
-    print "~qprime:";
-    print qprime;
-    if (coinflip == 0):
-        return (alpha, q);
-    return (pi, qprime);
 
-def victorRound(gone, gtwo, isomorphism, matrix, commitment, coinflip):
-    #check matrix is same as commit
-    #commit(matrix) == commitment
+def peggyRoundTwo(alpha, q, pi, qprime, coinflip):
     if (coinflip == 0):
+        print alpha;
+        print q;
+        #TODO: send(alpha, q);
+    else:
+        print pi;
+        print qprime;
+        #TODO: send(pi, qprime);
+
+def peggyRoundThree(randomones, randomtwos):
+    print "Peggy send final"
+    #TODO: send(randomones, randomtwos);#send when victor asks for verify
+
+def victorRound(gone, gtwo, isomorphism, matrix, hashed, randomones, randomtwos, coinflip):
+    n = len(gtwo);
+    #check matrix is part of q from commitment
+    #check qprime is subgraph of q from commitment
+    for i in range(n):
+        for j in range(n):
+            if (matrix[i, j] == -1):
+                continue;
+            check = hashelement(randomones[i][j] + randomtwos[i][j] + str(matrix[i, j]));
+            if (hashed[i][j] != check):
+                return false;
+
+    if (coinflip == 0):
+        #check q is the right isomorph
         q = getIsomorphism(gtwo, isomorphism);
-        return (numpy.q == numpy.matrix).all();
-    #check matrix is part of q (commitment)
-    qprime = getIsomorphism(gone, isomorphism);
-    return (numpy.qprime == numpy.matrix).all();
+        for i in range(n):
+            for j in range(n):
+                if (q[i, j] != matrix[i, j]):
+                    return false;
+    else:
+        #check qprime is the right isomorph
+        qprime = getIsomorphism(gone, isomorphism);
+        for i in range(n):
+            for j in range(n):
+                if (qprime[i, j] != matrix[i, j]):
+                    return false;
+    return true;
 
 #tests matrix file reading
 def getMatrixTest():
