@@ -98,6 +98,7 @@ def peggyRoundOne(gone, gtwo, beta):
     #TODO: send(hashed, randomones);#this is the commitment
     pi = numpy.matrix(alphaMatrix) * numpy.matrix(betaMatrix);
     qprime = getIsomorphism(gone, pi);
+    return (alphaMatrix, q, pi, qprime, randomones, randomtwos, hashed);
 
 def peggyRoundTwo(alpha, q, pi, qprime, coinflip):
     if (coinflip == 0):
@@ -123,7 +124,7 @@ def victorRound(gone, gtwo, isomorphism, matrix, hashed, randomones, randomtwos,
                 continue;
             check = hashelement(randomones[i][j] + randomtwos[i][j] + str(matrix[i, j]));
             if (hashed[i][j] != check):
-                return false;
+                return False;
 
     if (coinflip == 0):
         #check q is the right isomorph
@@ -131,15 +132,15 @@ def victorRound(gone, gtwo, isomorphism, matrix, hashed, randomones, randomtwos,
         for i in range(n):
             for j in range(n):
                 if (q[i, j] != matrix[i, j]):
-                    return false;
+                    return False;
     else:
         #check qprime is the right isomorph
         qprime = getIsomorphism(gone, isomorphism);
         for i in range(n):
             for j in range(n):
                 if (qprime[i, j] != matrix[i, j]):
-                    return false;
-    return true;
+                    return False;
+    return True;
 
 #tests matrix file reading
 def getMatrixTest():
@@ -165,15 +166,21 @@ def getIsomorphismTest():
     print isomorphism;
 
 def roundTest():
-    matrix = getMatrixFromFile(sys.argv[1]);
-    submatrix = getMatrixFromFile(sys.argv[2]);
+    submatrix = getMatrixFromFile(sys.argv[1]);
+    matrix = getMatrixFromFile(sys.argv[2]);
     betaMatrix = getMatrixFromFile(sys.argv[3]);
-#    n = len(matrix);
-#    beta = generateIsomorphismDefinition(n);
-    print "Round 0";
-    peggyRound(matrix, submatrix, betaMatrix, 0);
-    print "Round 1";
-    peggyRound(matrix, submatrix, betaMatrix, 1);
+    print "Coinflip 0";
+    coinflip = 0;
+    alpha, q, pi, qprime, randomones, randomtwos, hashed = peggyRoundOne(submatrix, matrix, betaMatrix);
+    peggyRoundTwo(alpha, q, pi, qprime, coinflip);
+    peggyRoundThree(randomones, randomtwos);
+    print victorRound(submatrix, matrix, alpha, q, hashed, randomones, randomtwos, coinflip);
+    print "Coinflip 1";
+    coinflip = 1;
+    alpha, q, pi, qprime, randomones, randomtwos, hashed = peggyRoundOne(submatrix, matrix, betaMatrix);
+    peggyRoundTwo(alpha, q, pi, qprime, coinflip);
+    peggyRoundThree(randomones, randomtwos);
+    print victorRound(submatrix, matrix, pi, qprime, hashed, randomones, randomtwos, coinflip);
 
 print "Matrix tests";
 getMatrixTest();
