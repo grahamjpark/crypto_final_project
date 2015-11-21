@@ -1,43 +1,76 @@
-import socket               # Import socket module
-import string
+#This stuff can be used to bit commitment.
+#It out puts a random, finds the hash of that random, then figures out whether that means a 1 or a 0
+
+import hashlib
 import random
+import sys
+import os
+import math
+import binascii
+import socket
+import sys
+from thread import *
 from flipCoin import *
 
+HOST = ''   # Symbolic name meaning all available interfaces
+PORT = 12351 # Arbitrary non-privileged port
+ 
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+print 'Socket created'
+ 
+#Bind socket to local host and port
+try:
+    s.bind((HOST, PORT))
+except socket.error as msg:
+    print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+    sys.exit()
+     
+print 'Socket bind complete'
+ 
+#Start listening on socket
+s.listen(10)
+print 'Socket now listening'
 
-def checkHash():
-	#Sets up the hash function
-	m = hashlib.md5()
-	#Adds the random hex string to be hashed
-	m.update(recvNum)
-	#Hashes the string (which outputs stuff) and converts that to a hex string
-	tempHash = binascii.hexlify(m.digest());
-	return tempHash == recvHash
+
+#wait to accept a connection - blocking call
+conn, addr = s.accept()
+print 'Connected with ' + addr[0] + ':' + str(addr[1])
+
+#Flips the coin and sends the resulting hash to client    
+flipCoin()
+toSend = 'COINFLIP-PROCESS\nHASH\n' + getHash()
+conn.sendall(toSend)
+
+#Receiving from client
+data = conn.recv(1024)
+
+dataParts = data.split('\n')
+
+bitGuess = -1
+if 'COINFLIP-PROCESS' in dataParts[0] and 'BIT-GUESS' in dataParts[1]:
+	bitGuess = int(dataParts[2])
+
+toSend = 'COINFLIP-PROCESS\nRANDOM-NUMBER\n' + str(getRandom())
+conn.sendall(toSend)
+
+print 'Bit from random number: ' + str(getBitFromRandom(getRandom()))
+challenge = -1
+if getBitFromRandom(getRandom()) == bitGuess:
+	challenge = 1
+else:
+	challenge = 0
+
+print 'Challenge: ' + str(challenge)
 
 
+while True:
+     
+    #Receiving from client
+    data = conn.recv(1024)
+    if not data: 
+        break
+ 
+#came out of loop
+conn.close()
 
-conn = socket.socket()         # Create a socket object
-host = socket.gethostname() # Get local machine name
-port = 12346                # Reserve a port for your service.
-
-conn.connect((host, port))
-recieved = conn.recv(1024)
-
-
-while recieved:
-	# The request will be broken up by new lines
-	requestParts = recieved.split('\n')
-
-	# Each newline will be more specific to which part of the program it is
-	if 'COINFLIP-PROCESS' in requestParts[0]:
-		if 'HASH' in requestParts[1]:
-			# If its a hash that's been sent, calls setHash from flipCoin.py
-			setHash(requestParts[2])
-
-			# Picks a guess at whether it's odd or even and sends it
-			commitBit = getCommitBit()
-			conn.send("COINFLIP-PROCESS\nCOMMITMENT\n" + str(commitBit))
-		if 'RANDOM-NUMBER' in requestParts[1]:
-			bit = getBitFromRandom(requestParts[2])
-			result = bit == getCommitBit() #This conditional might now work
-print s.recv(1024)
-s.close                     # Close the socket when done
+s.close()
