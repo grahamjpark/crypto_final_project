@@ -16,7 +16,7 @@ __commitBit = -1
 #Called by Victor only
 def flipCoin():
 	#Uses OS to generate 124 bit random, then converts it to hexadecimal string
-	rand = binascii.hexlify(os.urandom(124))
+	rand = binascii.hexlify(os.urandom(256))
 	global __rand
 	__rand = rand
 
@@ -32,7 +32,7 @@ def flipCoin():
 	#Converts that char to an int and takes it mod 2 to get the bit commitment
 	__bit = getBitFromRandom(rand)
 	global __flipped
-	flipped = 1
+	__flipped = 1
 	print 'Coin fliped. Variables set'
 
 def getRandom():
@@ -58,4 +58,5 @@ def getCommitBit():
 
 #To be called with getRandom to determine if number is odd or even
 def getBitFromRandom(random):
-	return ord(__rand[0:1]) % 2
+	print 'FROM FLIP: ' + random
+	return ord(random[0:1]) % 2
