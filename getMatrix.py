@@ -7,6 +7,7 @@ import hashlib;
 import binascii;
 import random;
 import os;
+from matrixOperations import *
 
 #args: String filename
 #return: 2d int array adjacency matrix
@@ -95,7 +96,6 @@ def peggyRoundOne(gone, gtwo, beta):
     alphaMatrix = getIsomorphismDefinitionMatrix(alpha);
     q = getIsomorphism(gtwo, alphaMatrix);
     hashed, randomones, randomtwos = commit(q);
-    #TODO: send(hashed, randomones);#this is the commitment
     pi = numpy.matrix(alphaMatrix) * numpy.matrix(betaMatrix);
     qprime = getIsomorphism(gone, pi);
     return (alphaMatrix, q, pi, qprime, randomones, randomtwos, hashed);

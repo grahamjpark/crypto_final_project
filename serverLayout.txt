@@ -1,5 +1,5 @@
 The first line is the major group, the second is the specific step, and the third is the data.
-Split the recieved data on \n
+Split the recieved data on \n (or with $ for things that use matrices)
 EXAMPLE PACKET:
 COINFLIP-PROCESS
 HASH

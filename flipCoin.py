@@ -62,32 +62,7 @@ def getBitFromRandom(random):
 
 
 
-def serverFlip():
-
-	HOST = ''   # Symbolic name meaning all available interfaces
-	PORT = 12351 # Arbitrary non-privileged port
-	 
-	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	print 'Socket created'
-	 
-	#Bind socket to local host and port
-	try:
-	    s.bind((HOST, PORT))
-	except socket.error as msg:
-	    print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
-	    sys.exit()
-	     
-	print 'Socket bind complete'
-	 
-	#Start listening on socket
-	s.listen(10)
-	print 'Socket now listening'
-
-
-	#wait to accept a connection - blocking call
-	conn, addr = s.accept()
-	print 'Connected with ' + addr[0] + ':' + str(addr[1])
-
+def serverFlip(conn):
 	#Flips the coin and sends the resulting hash to client    
 	flipCoin()
 	toSend = 'COINFLIP-PROCESS\nHASH\n' + getHash()
@@ -114,19 +89,6 @@ def serverFlip():
 
 	print 'Challenge: ' + str(challenge)
 
-
-	while True:
-	     
-	    #Receiving from client
-	    data = conn.recv(1024)
-	    if not data: 
-	        break
-	 
-	#came out of loop
-	conn.close()
-
-	s.close()
-
 	return challenge
 
 
@@ -142,12 +104,7 @@ def checkHash(random):
     tempHash = binascii.hexlify(m.digest());
     return tempHash == getHash()
 
-def clientFlip():
-	s = socket.socket()         # Create a socket object
-	host = socket.gethostname() # Get local machine name
-	port = 12351                # Reserve a port for your service.
-
-	s.connect((host, port))
+def clientFlip(s):
 	data = s.recv(1024)
 	dataParts = data.split('\n')
 
@@ -178,5 +135,4 @@ def clientFlip():
 
 	print 'Challenge: ' + str(challenge)
 
-	s.close()                     # Close the socket when done
 	return challenge
