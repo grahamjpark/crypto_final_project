@@ -58,5 +58,4 @@ def getCommitBit():
 
 #To be called with getRandom to determine if number is odd or even
 def getBitFromRandom(random):
-	print 'FROM FLIP: ' + random
 	return ord(random[0:1]) % 2

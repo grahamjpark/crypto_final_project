@@ -13,7 +13,7 @@ from thread import *
 from flipCoin import *
 
 HOST = ''   # Symbolic name meaning all available interfaces
-PORT = 12331 # Arbitrary non-privileged port
+PORT = 12351 # Arbitrary non-privileged port
  
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print 'Socket created'
@@ -42,28 +42,35 @@ toSend = 'COINFLIP-PROCESS\nHASH\n' + getHash()
 conn.sendall(toSend)
 
 #Receiving from client
-print 'I wait now'
 data = conn.recv(1024)
-print '|' + data + '|'
 
 dataParts = data.split('\n')
 
 bitGuess = -1
 if 'COINFLIP-PROCESS' in dataParts[0] and 'BIT-GUESS' in dataParts[1]:
 	bitGuess = int(dataParts[2])
-	print str(bitGuess)
 
 toSend = 'COINFLIP-PROCESS\nRANDOM-NUMBER\n' + str(getRandom())
-print str(getRandom())
 conn.sendall(toSend)
 
+print 'Bit from random number: ' + str(getBitFromRandom(getRandom()))
 challenge = -1
 if getBitFromRandom(getRandom()) == bitGuess:
 	challenge = 1
 else:
 	challenge = 0
 
-print 'challenge: ' + str(challenge)
-conn.close()
+print 'Challenge: ' + str(challenge)
+
+
+while True:
+     
+    #Receiving from client
+    data = conn.recv(1024)
+    if not data: 
+        break
  
+#came out of loop
+conn.close()
+
 s.close()
