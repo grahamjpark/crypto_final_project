@@ -130,19 +130,19 @@ def peggyRoundOne(gone, gtwo, beta):
     qprime = getIsomorphism(gone, pi);
     return (alphaMatrix, q, pi, qprime, randomones, randomtwos, hashed);
 
-def peggyRoundTwo(alpha, q, pi, qprime, coinflip):
-    if (coinflip == 0):
-        print alpha;
-        print q;
-        #TODO: send(alpha, q);
-    else:
-        print pi;
-        print qprime;
-        #TODO: send(pi, qprime);
+# def peggyRoundTwo(alpha, q, pi, qprime, coinflip):
+#     if (coinflip == 0):
+#         print alpha;
+#         print q;
+#         #TODO: send(alpha, q);
+#     else:
+#         print pi;
+#         print qprime;
+#         #TODO: send(pi, qprime);
 
-def peggyRoundThree(randomones, randomtwos):
-    print "Peggy send final"
-    #TODO: send(randomones, randomtwos);#send when victor asks for verify
+# def peggyRoundThree(randomones, randomtwos):
+#     print "Peggy send final"
+#     #TODO: send(randomones, randomtwos);#send when victor asks for verify
 
 def victorRound(gone, gtwo, isomorphism, matrix, hashed, randomones, randomtwos, coinflip):
     n = len(gtwo);
