@@ -16,6 +16,7 @@ from getMatrix import *
 from matrixOperations import *
 
 challenges = 0;
+total = 0;
 
 def doneHere(soc):
     soc.close()                    # Close the socket when done
@@ -23,6 +24,7 @@ def doneHere(soc):
 
 def attemptZPK():
     global challenges;
+    global total;
     ############################## ROUND ONE ##############################
     alpha, q, randomones, randomtwos, hashed = peggyRoundOne(submatrix, matrix, betaMatrix);
 #    print numpy.matrix(hashed)
@@ -38,6 +40,7 @@ def attemptZPK():
     soc.recv(2)
     ############################## COIN FLIP ##############################
     coinflip = clientFlip(soc)
+    total += 1;
 
     ############################## ROUND TWO ##############################
     toSend = 'ROUND-TWO$'
@@ -79,6 +82,8 @@ def attemptZPK():
         exit()
     if 'False' in dataParts[1]:
         print 'Victor reported a failed test. Exiting.'
+        print "Received Q and Alpha [%d] times" % (total - challenges);
+        print "Received Q' and Pi [%d] times" % challenges;
         doneHere(soc)
 
 if '-help' in sys.argv[1]:
@@ -115,7 +120,7 @@ for i in range(NUM_TESTS):
     print "Trying round %d" % i
     attemptZPK()
 print 'All tests passed.'
-print "Provided Q and Alpha [%d] times" % (int(NUM_TESTS) - challenges);
+print "Provided Q and Alpha [%d] times" % (total - challenges);
 print "Provided Q' and Pi [%d] times" % challenges;
 doneHere(soc)
 

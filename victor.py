@@ -17,6 +17,7 @@ from getMatrix import *
 from matrixOperations import *
 
 challenges = 0;
+total = 0;
 
 def doneHere(conn):
     ############################## SERVER STUFF ##############################
@@ -36,6 +37,7 @@ def doneHere(conn):
 def attemptZPK():
     ############################## ROUND ONE ##############################
     global challenges;
+    global total;
     conn.recv(2)
     size = int(conn.recv(16))
     data = ''
@@ -56,6 +58,7 @@ def attemptZPK():
 
     ############################## COIN FLIP ##############################
     coinFlip = serverFlip(conn)
+    total += 1;
 
     ############################## ROUND TWO ##############################
     # if 0 recv(alpha, q), else recv(pi, qprime)
@@ -135,6 +138,8 @@ def attemptZPK():
     conn.sendall(toSend)
     if not result:
         print 'Peggy failed a test, reported failure to Peggy and exiting'
+        print "Received Q and Alpha [%d] times" % (total - challenges);
+        print "Received Q' and Pi [%d] times" % challenges;
         doneHere(conn)
 
 if '-help' in sys.argv[1]:
@@ -177,6 +182,6 @@ for i in range(NUM_TESTS):
     print "Trying round %d" % i
     attemptZPK()
 print 'All tests passed.'
-print "Received Q and Alpha [%d] times" % (int(NUM_TESTS) - challenges);
+print "Received Q and Alpha [%d] times" % (total - challenges);
 print "Received Q' and Pi [%d] times" % challenges;
 doneHere(conn)
