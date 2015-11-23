@@ -108,8 +108,14 @@ def attemptZPK():
     result = False
 
     if coinFlip == 1:
+    	print pi
+    	print '\n\n'
+    	print qprime
         result = victorRound(submatrix, matrix, pi, qprime, hashed, randomones, randomtwos, coinFlip);
     else:
+    	print pi
+    	print '\n\n'
+    	print qprime
         result = victorRound(submatrix, matrix, alpha, q, hashed, randomones, randomtwos, coinFlip);
 
     #if you want to see what happens when it's false
