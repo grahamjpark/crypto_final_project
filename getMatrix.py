@@ -38,8 +38,7 @@ def nmatrixToString(nmatrix):
             string += str(nmatrix[i, j]);
             if j < n - 1:
                 string += " ";
-        if i < n - 1:
-            string += "\n";
+        string += "\n";
     return string;
 
 #args: String filename

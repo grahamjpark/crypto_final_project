@@ -9,9 +9,9 @@ gtwo = generateMatrix(n);
 gone = numpy.matrix(gtwo);
 for i in range(remove):
    removeNode(gone, random.randint(0, n - 1));
-gone = matrixToString(gone) + "\n";
-gtwo = matrixToString(gtwo) + "\n";
-beta = matrixToString(generateIsomorphismDefinitionMatrix(n)) + "\n";
+gone = matrixToString(gone);
+gtwo = matrixToString(gtwo);
+beta = matrixToString(generateIsomorphismDefinitionMatrix(n));
 
 outfile = open("data/gone%02d.txt" % n, "w");
 outfile.write(gone);
