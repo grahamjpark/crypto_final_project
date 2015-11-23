@@ -16,7 +16,7 @@ from matrixOperations import *
 
 ############################## SERVER STUFF ##############################
 HOST = ''   # Symbolic name meaning all available interfaces
-PORT = 12351 # Arbitrary non-privileged port
+PORT = int(sys.argv[3]) # Arbitrary non-privileged port
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print 'Socket created'
 #Bind socket to local host and port
@@ -40,19 +40,19 @@ submatrix = getMatrixFromFile(sys.argv[1]);
 matrix = getMatrixFromFile(sys.argv[2]);
 
 ############################## ROUND ONE ##############################
-data = conn.recv(1024) #recv(hashed, randomones)
+data = conn.recv(4096) #recv(hashed, randomones)
 dataParts = data.split('$')
 if 'ROUND-ONE' not in dataParts[0]:
 	print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
 	exit()
-hashed = stringToMatrix(dataParts[1])
-randomones = stringToMatrix(dataParts[2])
+hashed = parseMatrix(dataParts[1])
+randomones = parseMatrix(dataParts[2])
 
 ############################## COIN FLIP ##############################
 coinFlip = serverFlip(conn)
 
 ############################## ROUND TWO ##############################
-data = conn.recv(1024) # if 0 recv(alpha, q), else recv(pi, qprime)
+data = conn.recv(4096) # if 0 recv(alpha, q), else recv(pi, qprime)
 dataParts = data.split('$')
 
 alpha = numpy.random.rand(0,0)
@@ -65,26 +65,26 @@ if 'ROUND-TWO' not in dataParts[0]:
 	exit()
 
 if coinFlip == 0:
-	alpha = stringToMatrix(dataParts[1])
-	q = stringToMatrix(dataParts[2])
+	alpha = parseIntMatrix(dataParts[1])
+	q = parseIntMatrix(dataParts[2])
 else:
-	pi = stringToMatrix(dataParts[1])
-	qprime = stringToMatrix(dataParts[2])
+	pi = parseIntMatrix(dataParts[1])
+	qprime = parseIntMatrix(dataParts[2])
 
 ############################## ROUND THREE ##############################
-data = conn.recv(1024)  #recv(randomtwos)
+data = conn.recv(4096)  #recv(randomtwos)
 dataParts = data.split('$')
 
 if 'ROUND-THREE' not in dataParts[0]:
 	print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
 	exit()
 
-randomtwos = stringToMatrix(dataParts[1])
+randomtwos = parseMatrix(dataParts[1])
 
 if coinFlip == 1:
-	victorRound(submatrix, matrix, pi, qprime, hashed, randomones, randomtwos, coinflip);
+	victorRound(submatrix, matrix, pi, qprime, hashed, randomones, randomtwos, coinFlip);
 else:
-	victorRound(submatrix, matrix, alpha, q, hashed, randomones, randomtwos, coinflip);
+	victorRound(submatrix, matrix, alpha, q, hashed, randomones, randomtwos, coinFlip);
 
 ############################## SERVER STUFF ##############################
 # Waits for client to close first

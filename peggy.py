@@ -18,7 +18,7 @@ from matrixOperations import *
 ############################## SERVER STUFF ##############################
 soc = socket.socket()         # Create a socket object
 host = socket.gethostname() # Get local machine name
-port = 12351                # Reserve a port for your service.
+port = int(sys.argv[4])                # Reserve a port for your service.
 
 soc.connect((host, port))
 ##########################################################################
