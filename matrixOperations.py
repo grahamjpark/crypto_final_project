@@ -27,10 +27,12 @@ def matrixToString(matrix):
 	arr = numpy.array(matrix)	
 	return str(arr)
 
+def test():
+    # arr = matrixToString(randomones);
+    # print arr
+    matrix = stringToMatrix(randomones)
+    print matrix
+    string = matrixToString(matrix)
+    print string
 
-# arr = matrixToString(randomones);
-# print arr
-matrix = stringToMatrix(randomones)
-print matrix
-string = matrixToString(matrix)
-print string
+#test();
