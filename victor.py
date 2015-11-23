@@ -66,10 +66,10 @@ if 'ROUND-TWO' not in dataParts[0]:
 
 if coinFlip == 0:
 	alpha = parseIntMatrix(dataParts[1])
-	q = parseIntMatrix(dataParts[2])
+	q = numpy.matrix(parseIntMatrix(dataParts[2]))
 else:
 	pi = parseIntMatrix(dataParts[1])
-	qprime = parseIntMatrix(dataParts[2])
+	qprime = numpy.matrix(parseIntMatrix(dataParts[2]))
 
 ############################## ROUND THREE ##############################
 data = conn.recv(4096)  #recv(randomtwos)
@@ -80,6 +80,17 @@ if 'ROUND-THREE' not in dataParts[0]:
 	exit()
 
 randomtwos = parseMatrix(dataParts[1])
+
+print 'Lengths of submatrix, matrix, pi, alpha, q, qprime, hashed, randomones, randomtwos, coinFlip'
+print  len(submatrix)
+print len(matrix)
+print len(pi)
+print len(alpha)
+print len(q)
+print len(qprime)
+print len(hashed)
+print len(randomtwos)
+print len(randomones)
 
 if coinFlip == 1:
 	victorRound(submatrix, matrix, pi, qprime, hashed, randomones, randomtwos, coinFlip);
