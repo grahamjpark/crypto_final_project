@@ -139,7 +139,12 @@ def peggyRoundOne(gone, gtwo, beta):
     hashed, randomones, randomtwos = commit(q);
     pi = numpy.matrix(alphaMatrix) * numpy.matrix(betaMatrix);
     qprime = getIsomorphism(gone, pi);
-    return (alphaMatrix, q, pi, qprime, randomones, randomtwos, hashed);
+    return (alphaMatrix, q, randomones, randomtwos, hashed);
+
+def peggyCoinflipOne(alphaMatrix, betaMatrix, gone):
+    pi = numpy.matrix(alphaMatrix) * numpy.matrix(betaMatrix);
+    qprime = getIsomorphism(gone, pi);
+    return (pi, qprime);
 
 def peggyRoundTwo(alpha, q, pi, qprime, coinflip):
     if (coinflip == 0):

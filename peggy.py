@@ -20,7 +20,7 @@ def doneHere(soc):
 
 def attemptZPK():
     ############################## ROUND ONE ##############################
-    alpha, q, pi, qprime, randomones, randomtwos, hashed = peggyRoundOne(submatrix, matrix, betaMatrix);
+    alpha, q, randomones, randomtwos, hashed = peggyRoundOne(submatrix, matrix, betaMatrix);
 #    print numpy.matrix(hashed)
 #    print '\n'
 #    print numpy.matrix(randomones)
@@ -47,6 +47,7 @@ def attemptZPK():
         # print pi
         # print '\n\n'
         # print qprime
+        pi, qprime = peggyCoinflipOne(alpha, betaMatrix, submatrix);
         toSend += matrixToString(pi) + '$'
         toSend += matrixToString(qprime)
     soc.sendall('ok')
