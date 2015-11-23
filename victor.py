@@ -106,11 +106,11 @@ def attemptZPK():
     randomtwos = parseMatrix(dataParts[1])
 
     result = False
-    print numpy.matrix(hashed)
-    print '\n'
-    print numpy.matrix(randomones)
-    print '\n'
-    print numpy.matrix(randomtwos)
+#    print numpy.matrix(hashed)
+#    print '\n'
+#    print numpy.matrix(randomones)
+#    print '\n'
+#    print numpy.matrix(randomtwos)
     if coinFlip == 1:
         # print numpy.matrix(pi)
         # print '\n'
@@ -168,7 +168,7 @@ conn.sendall(toSend)
 
 print 'Making Peggy prove using ' + str(NUM_TESTS) + ' round(s)'
 for i in range(NUM_TESTS):
-    print '\n\nTrying round'
+    print "Trying round %d" % i
     attemptZPK()
 print 'All tests passed.'
 doneHere(conn)

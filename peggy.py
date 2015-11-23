@@ -21,11 +21,11 @@ def doneHere(soc):
 def attemptZPK():
     ############################## ROUND ONE ##############################
     alpha, q, pi, qprime, randomones, randomtwos, hashed = peggyRoundOne(submatrix, matrix, betaMatrix);
-    print numpy.matrix(hashed)
-    print '\n'
-    print numpy.matrix(randomones)
-    print '\n'
-    print numpy.matrix(randomtwos)
+#    print numpy.matrix(hashed)
+#    print '\n'
+#    print numpy.matrix(randomones)
+#    print '\n'
+#    print numpy.matrix(randomtwos)
     toSend = 'ROUND-ONE$' + matrixToString(hashed) + '$' + matrixToString(randomones)
     # sendall(hashed, randomones) #this is the commitment
     soc.sendall('ok')
@@ -106,7 +106,7 @@ NUM_TESTS = int(dataParts[1])
 
 print 'Proving to Victor using ' + str(NUM_TESTS) + ' round(s)'
 for i in range(NUM_TESTS):
-    print '\n\nTrying round'
+    print "Trying round %d" % i
     attemptZPK()
 print 'All tests passed.'
 doneHere(soc)

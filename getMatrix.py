@@ -9,6 +9,16 @@ import random;
 import os;
 from matrixOperations import *
 
+def isSubmatrix(submatrix, matrix):
+    n = len(matrix);
+    for i in range(n):
+        for j in range(i, n):
+            if submatrix[i, j] == -1:
+                continue;
+            if submatrix[i, j] != matrix[i, j]:
+                return False;
+    return True;
+
 def parseMatrix(string):
     rows = string.split("\n");
     rowCount = len(rows) - 1;
@@ -110,13 +120,14 @@ def commit(matrix):
             rand1, rand2 = generateRandoms();
             randomones[i][j] = rand1;
             randomtwos[i][j] = rand2;
-            hashed[i][j] = hashelement(rand1 + rand2 + str(matrix[i, j]));
+            hashed[i][j] = hashelement(str(rand1) + str(rand2) + str(matrix[i, j]));
     return hashed, randomones, randomtwos;
 
 def hashelement(string):
     m = hashlib.md5();
     m.update(string);
     hashstring = binascii.hexlify(m.digest());
+    hashstring = string;
     return hashstring;
 
 def peggyRoundOne(gone, gtwo, beta):
@@ -148,13 +159,14 @@ def victorRound(gone, gtwo, isomorphism, matrix, hashed, randomones, randomtwos,
     n = len(gtwo);
     #check matrix is part of q from commitment
     #check qprime is subgraph of q from commitment
+    check = [["" for j in range(n)] for i in range(n)];
     for i in range(n):
         for j in range(n):
             if (matrix[i, j] == -1):
                 continue;
-            check = hashelement(randomones[i][j] + randomtwos[i][j] + str(matrix[i, j]));
-            if (hashed[i][j] != check):
-                print '11111111111111'
+            check[i][j] = hashelement(str(randomones[i][j]) + str(randomtwos[i][j]) + str(matrix[i, j]));
+            if (hashed[i][j] != check[i][j]):
+                print "Peggy doesn't know an isomorphism!";
                 return False;
 
     if (coinflip == 0):
@@ -163,7 +175,7 @@ def victorRound(gone, gtwo, isomorphism, matrix, hashed, randomones, randomtwos,
         for i in range(n):
             for j in range(n):
                 if (q[i, j] != matrix[i, j]):
-                    print '22222222222222222222'
+                    print "Peggy didn't give Q or Alpha correctly!";
                     return False;
     else:
         #check qprime is the right isomorph
@@ -171,7 +183,7 @@ def victorRound(gone, gtwo, isomorphism, matrix, hashed, randomones, randomtwos,
         for i in range(n):
             for j in range(n):
                 if (qprime[i, j] != matrix[i, j]):
-                    print '33333333333333333333333333'
+                    print "Peggy didn't give Q' or Pi correctly!";
                     return False;
     return True;
 
