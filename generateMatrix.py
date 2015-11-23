@@ -12,15 +12,21 @@ for i in range(remove):
     index = (index + 1) % n;
     hasRemoved = gone[index, index] != -1;
     removeNode(gone, index);
+'''
 beta = [0 for i in range(n)];
 for i in range(0, remove):
     beta[i] = (i + 1) % (remove);
 for i in range(remove, n):
     beta[i] = i;
 print beta;
+'''
 
-beta = getIsomorphismDefinitionMatrix(beta);
+beta = generateIsomorphismDefinitionMatrix(n);
 gprime = getIsomorphism(gone, beta);
+print numpy.matrix(gone);
+print '~'
+print numpy.matrix(gprime);
+print '~'
 
 for i in range(n):
     for j in range(i, n):
@@ -28,8 +34,7 @@ for i in range(n):
             gprime[i, j] = random.randint(0, 1);
             gprime[j, i] = gprime[i, j];             
 gtwo = gprime;
-    
-print numpy.matrix(gone);
+
 print numpy.matrix(gtwo);
 
 gone = matrixToString(gone);
