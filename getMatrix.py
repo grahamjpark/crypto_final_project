@@ -9,17 +9,37 @@ import random;
 import os;
 from matrixOperations import *
 
+def parseMatrix(string):
+    rows = string.split("\n");
+    rowCount = len(rows) - 1;
+    matrix = [[0 for i in range(rowCount)] for i in range(rowCount)];
+    for i in range(rowCount):
+        elements = rows[i].split(" ");
+        for j in range(rowCount):
+            matrix[i][j] = int(elements[j]);
+    return matrix;
+
+def matrixToString(matrix):
+    return nmatrixToString(numpy.matrix(matrix));
+
+def nmatrixToString(nmatrix):
+    string = "";
+    n = len(nmatrix);
+    for i in range(n):
+        for j in range(n):
+            string += str(nmatrix[i, j]);
+            if j < n - 1:
+                string += " ";
+        if i < n - 1:
+            string += "\n";
+    return string;
+
 #args: String filename
 #return: 2d int array adjacency matrix
 def getMatrixFromFile(filename):
     fd = open(filename, 'r');
-    rows = fd.read().split("\n");
+    matrix = parseMatrix(fd.read());
     fd.close();
-    rowCount =  len(rows) - 1; #last element in rows is empty
-    matrix = [[0 for i in range(rowCount)] for i in range(rowCount)];
-    for i in range(rowCount):
-        for j in range(rowCount):
-            matrix[i][j] = int((rows[i].split(" "))[j]);
     return matrix;
 
 #args: n size of random adjacency matrix
@@ -181,6 +201,10 @@ def roundTest():
     peggyRoundTwo(alpha, q, pi, qprime, coinflip);
     peggyRoundThree(randomones, randomtwos);
     print victorRound(submatrix, matrix, pi, qprime, hashed, randomones, randomtwos, coinflip);
+    print matrix;
+    print nmatrixToString(numpy.matrix(matrix));
+    print matrixToString(matrix);
+    print matrixToString(numpy.matrix(matrix));
 
 print "Matrix tests";
 getMatrixTest();
