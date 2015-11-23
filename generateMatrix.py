@@ -31,7 +31,6 @@ gtwo = gprime;
     
 print numpy.matrix(gone);
 print numpy.matrix(gtwo);
-print getIsomorphism(gone, beta);
 
 gone = matrixToString(gone);
 gtwo = matrixToString(gtwo);
