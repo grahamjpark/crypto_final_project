@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 #This stuff can be used to bit commitment.
 #It out puts a random, finds the hash of that random, then figures out whether that means a 1 or a 0
 
@@ -13,6 +15,9 @@ from thread import *
 from flipCoin import *
 from getMatrix import *
 from matrixOperations import *
+
+challenges = 0;
+total = 0;
 
 def doneHere(conn):
     ############################## SERVER STUFF ##############################
@@ -31,6 +36,8 @@ def doneHere(conn):
 
 def attemptZPK():
     ############################## ROUND ONE ##############################
+    global challenges;
+    global total;
     conn.recv(2)
     size = int(conn.recv(16))
     data = ''
@@ -51,6 +58,7 @@ def attemptZPK():
 
     ############################## COIN FLIP ##############################
     coinFlip = serverFlip(conn)
+    total += 1;
 
     ############################## ROUND TWO ##############################
     # if 0 recv(alpha, q), else recv(pi, qprime)
@@ -83,6 +91,7 @@ def attemptZPK():
     else:
         pi = parseIntMatrix(dataParts[1])
         qprime = numpy.matrix(parseIntMatrix(dataParts[2]))
+        challenges += 1;
 
     ############################## ROUND THREE #############################
     #recv(randomtwos)
@@ -106,11 +115,11 @@ def attemptZPK():
     randomtwos = parseMatrix(dataParts[1])
 
     result = False
-    print numpy.matrix(hashed)
-    print '\n'
-    print numpy.matrix(randomones)
-    print '\n'
-    print numpy.matrix(randomtwos)
+#    print numpy.matrix(hashed)
+#    print '\n'
+#    print numpy.matrix(randomones)
+#    print '\n'
+#    print numpy.matrix(randomtwos)
     if coinFlip == 1:
         # print numpy.matrix(pi)
         # print '\n'
@@ -129,6 +138,8 @@ def attemptZPK():
     conn.sendall(toSend)
     if not result:
         print 'Peggy failed a test, reported failure to Peggy and exiting'
+        print "Received Q and Alpha [%d] times" % (total - challenges);
+        print "Received Q' and Pi [%d] times" % challenges;
         doneHere(conn)
 
 if '-help' in sys.argv[1]:
@@ -168,7 +179,9 @@ conn.sendall(toSend)
 
 print 'Making Peggy prove using ' + str(NUM_TESTS) + ' round(s)'
 for i in range(NUM_TESTS):
-    print '\n\nTrying round'
+    print "Trying round %d" % i
     attemptZPK()
 print 'All tests passed.'
+print "Received Q and Alpha [%d] times" % (total - challenges);
+print "Received Q' and Pi [%d] times" % challenges;
 doneHere(conn)

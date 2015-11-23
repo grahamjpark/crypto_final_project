@@ -6,7 +6,7 @@ CS 355 Final Project
 - [x] Set up sockets
 - [x] Set up hash functions
 - [x] Try to make da best random numbers
-- [ ] Set up bit commitment (communication between two programs)
+- [x] Set up bit commitment (communication between two programs)
 
 ##Grade
 
@@ -14,9 +14,9 @@ CS 355 Final Project
 - [x] Sockets (20pts)
 - [x] Commitment (20pts)
 - [x] Random gen (5pts)
-- [ ] Multiple runs (5pts)
-- [ ] Different graph sizes (5pts)
-- [ ] Other things (45pts)
+- [x] Multiple runs (5pts)
+- [x] Different graph sizes (5pts)
+- [x] Other things (45pts)
 
 ##Information
 
@@ -27,3 +27,12 @@ CS 355 Final Project
 ##Dates
 - Nov. 23: Submit to TA by email 
 - Nov. 30-Dec. 11: All group members must be present for demo
+- 
+
+##Running the code
+
+  Server<br />
+    python victor.py data/gone05.txt data/gtwo05.txt <PORT>
+    
+  Client<br />
+    python peggy.py data/gone05.txt data/gtwo05.txt data/beta05.txt <PORT>

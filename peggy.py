@@ -1,5 +1,6 @@
+#!/usr/bin/python
+
 #http://www.tutorialspoint.com/python/python_networking.htm
-#!/usr/bin/python           # This is client.py file
 
 import hashlib
 import random
@@ -14,18 +15,23 @@ from flipCoin import *
 from getMatrix import *
 from matrixOperations import *
 
+challenges = 0;
+total = 0;
+
 def doneHere(soc):
     soc.close()                    # Close the socket when done
     exit()
 
 def attemptZPK():
+    global challenges;
+    global total;
     ############################## ROUND ONE ##############################
-    alpha, q, pi, qprime, randomones, randomtwos, hashed = peggyRoundOne(submatrix, matrix, betaMatrix);
-    print numpy.matrix(hashed)
-    print '\n'
-    print numpy.matrix(randomones)
-    print '\n'
-    print numpy.matrix(randomtwos)
+    alpha, q, randomones, randomtwos, hashed = peggyRoundOne(submatrix, matrix, betaMatrix);
+#    print numpy.matrix(hashed)
+#    print '\n'
+#    print numpy.matrix(randomones)
+#    print '\n'
+#    print numpy.matrix(randomtwos)
     toSend = 'ROUND-ONE$' + matrixToString(hashed) + '$' + matrixToString(randomones)
     # sendall(hashed, randomones) #this is the commitment
     soc.sendall('ok')
@@ -34,6 +40,7 @@ def attemptZPK():
     soc.recv(2)
     ############################## COIN FLIP ##############################
     coinflip = clientFlip(soc)
+    total += 1;
 
     ############################## ROUND TWO ##############################
     toSend = 'ROUND-TWO$'
@@ -47,8 +54,10 @@ def attemptZPK():
         # print pi
         # print '\n\n'
         # print qprime
+        pi, qprime = peggyCoinflipOne(alpha, betaMatrix, submatrix);
         toSend += matrixToString(pi) + '$'
         toSend += matrixToString(qprime)
+        challenges += 1;
     soc.sendall('ok')
     soc.sendall('%16d' % len(toSend))
     soc.sendall(toSend)
@@ -73,6 +82,8 @@ def attemptZPK():
         exit()
     if 'False' in dataParts[1]:
         print 'Victor reported a failed test. Exiting.'
+        print "Received Q and Alpha [%d] times" % (total - challenges);
+        print "Received Q' and Pi [%d] times" % challenges;
         doneHere(soc)
 
 if '-help' in sys.argv[1]:
@@ -106,9 +117,11 @@ NUM_TESTS = int(dataParts[1])
 
 print 'Proving to Victor using ' + str(NUM_TESTS) + ' round(s)'
 for i in range(NUM_TESTS):
-    print '\n\nTrying round'
+    print "Trying round %d" % i
     attemptZPK()
 print 'All tests passed.'
+print "Provided Q and Alpha [%d] times" % (total - challenges);
+print "Provided Q' and Pi [%d] times" % challenges;
 doneHere(soc)
 
 
