@@ -24,6 +24,10 @@ Generating failure
 Generating success
 - python peggy.py data/gone05.txt data/gtwo05.txt data/beta05.txt PORT NUM_TESTS
 
+### Generate Random Matrices
+Generates G1(gone), G2(gtwo) and beta with the specified number of nodes
+- python generateMatrix.py NUM_NODES
+
 
 ##Grade
 
