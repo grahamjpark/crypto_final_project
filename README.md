@@ -27,3 +27,12 @@ CS 355 Final Project
 ##Dates
 - Nov. 23: Submit to TA by email 
 - Nov. 30-Dec. 11: All group members must be present for demo
+- 
+
+##Running the code
+
+  Server
+    python victor.py data/gone05.txt data/gtwo05.txt <PORT>
+    
+  Client
+    python peggy.py data/gone05.txt data/gtwo05.txt data/beta05.txt <PORT>
