@@ -14,6 +14,8 @@ from flipCoin import *
 from getMatrix import *
 from matrixOperations import *
 
+challenges = 0;
+
 def doneHere(conn):
     ############################## SERVER STUFF ##############################
     # Waits for client to close first
@@ -31,6 +33,7 @@ def doneHere(conn):
 
 def attemptZPK():
     ############################## ROUND ONE ##############################
+    global challenges;
     conn.recv(2)
     size = int(conn.recv(16))
     data = ''
@@ -83,6 +86,7 @@ def attemptZPK():
     else:
         pi = parseIntMatrix(dataParts[1])
         qprime = numpy.matrix(parseIntMatrix(dataParts[2]))
+        challenges += 1;
 
     ############################## ROUND THREE #############################
     #recv(randomtwos)
@@ -171,4 +175,6 @@ for i in range(NUM_TESTS):
     print "Trying round %d" % i
     attemptZPK()
 print 'All tests passed.'
+print "Received Q and Alpha [%d] times" % (int(NUM_TESTS) - challenges);
+print "Received Q' and Pi [%d] times" % challenges;
 doneHere(conn)

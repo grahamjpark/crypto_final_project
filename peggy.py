@@ -14,11 +14,14 @@ from flipCoin import *
 from getMatrix import *
 from matrixOperations import *
 
+challenges = 0;
+
 def doneHere(soc):
     soc.close()                    # Close the socket when done
     exit()
 
 def attemptZPK():
+    global challenges;
     ############################## ROUND ONE ##############################
     alpha, q, randomones, randomtwos, hashed = peggyRoundOne(submatrix, matrix, betaMatrix);
 #    print numpy.matrix(hashed)
@@ -50,6 +53,7 @@ def attemptZPK():
         pi, qprime = peggyCoinflipOne(alpha, betaMatrix, submatrix);
         toSend += matrixToString(pi) + '$'
         toSend += matrixToString(qprime)
+        challenges += 1;
     soc.sendall('ok')
     soc.sendall('%16d' % len(toSend))
     soc.sendall(toSend)
@@ -110,6 +114,8 @@ for i in range(NUM_TESTS):
     print "Trying round %d" % i
     attemptZPK()
 print 'All tests passed.'
+print "Provided Q and Alpha [%d] times" % (int(NUM_TESTS) - challenges);
+print "Provided Q' and Pi [%d] times" % challenges;
 doneHere(soc)
 
 
