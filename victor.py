@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 #This stuff can be used to bit commitment.
 #It out puts a random, finds the hash of that random, then figures out whether that means a 1 or a 0
 

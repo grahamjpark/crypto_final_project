@@ -1,5 +1,6 @@
+#!/usr/bin/python
+
 #http://www.tutorialspoint.com/python/python_networking.htm
-#!/usr/bin/python           # This is client.py file
 
 import hashlib
 import random
