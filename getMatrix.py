@@ -154,6 +154,7 @@ def victorRound(gone, gtwo, isomorphism, matrix, hashed, randomones, randomtwos,
                 continue;
             check = hashelement(randomones[i][j] + randomtwos[i][j] + str(matrix[i, j]));
             if (hashed[i][j] != check):
+                print '11111111111111'
                 return False;
 
     if (coinflip == 0):
@@ -162,6 +163,7 @@ def victorRound(gone, gtwo, isomorphism, matrix, hashed, randomones, randomtwos,
         for i in range(n):
             for j in range(n):
                 if (q[i, j] != matrix[i, j]):
+                    print '22222222222222222222'
                     return False;
     else:
         #check qprime is the right isomorph
@@ -169,6 +171,7 @@ def victorRound(gone, gtwo, isomorphism, matrix, hashed, randomones, randomtwos,
         for i in range(n):
             for j in range(n):
                 if (qprime[i, j] != matrix[i, j]):
+                    print '33333333333333333333333333'
                     return False;
     return True;
 
