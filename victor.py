@@ -41,7 +41,10 @@ matrix = getMatrixFromFile(sys.argv[2]);
 
 ############################## ROUND ONE ##############################
 data = conn.recv(1024) #recv(hashed, randomones)
-dataParts = data.split('&')
+dataParts = data.split('$')
+print dataParts[0]
+print dataParts[1]
+print dataParts[2]
 if 'ROUND-ONE' not in dataParts[0]:
 	print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
 	exit()
@@ -53,7 +56,7 @@ coinFlip = serverFlip(conn)
 
 ############################## ROUND TWO ##############################
 data = conn.recv(1024) # if 0 recv(alpha, q), else recv(pi, qprime)
-dataParts = data.split('&')
+dataParts = data.split('$')
 
 alpha = numpy.random.rand(0,0)
 q = numpy.random.rand(0,0)
@@ -73,7 +76,7 @@ else:
 
 ############################## ROUND THREE ##############################
 data = conn.recv(1024)  #recv(randomtwos)
-dataParts = data.split('&')
+dataParts = data.split('$')
 
 if 'ROUND-THREE' not in dataParts[0]:
 	print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'

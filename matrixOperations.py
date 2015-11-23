@@ -25,7 +25,7 @@ def stringToMatrix(string):
 
 def matrixToString(matrix):
 	arr = numpy.array(matrix)	
-	return arr
+	return str(arr)
 
 
 # arr = matrixToString(randomones);
