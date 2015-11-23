@@ -27,7 +27,7 @@
 # 	arr = numpy.array(matrix)	
 # 	return str(arr)
 
-<<<<<<< HEAD
+
 
 # # arr = matrixToString(randomones);
 # # print arr
@@ -35,7 +35,7 @@
 # print matrix
 # string = matrixToString(matrix)
 # print string
-=======
+
 def test():
     # arr = matrixToString(randomones);
     # print arr
@@ -45,4 +45,4 @@ def test():
     print string
 
 #test();
->>>>>>> f1a3f541a50bf7a0ef2c6d024aed28099270ea1c
+
