@@ -127,7 +127,7 @@ def hashelement(string):
     m = hashlib.md5();
     m.update(string);
     hashstring = binascii.hexlify(m.digest());
-    hashstring = string;
+#    hashstring = string;
     return hashstring;
 
 def peggyRoundOne(gone, gtwo, beta):
