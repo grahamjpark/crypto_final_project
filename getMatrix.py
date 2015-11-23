@@ -12,11 +12,19 @@ from matrixOperations import *
 def parseMatrix(string):
     rows = string.split("\n");
     rowCount = len(rows) - 1;
-    matrix = [[0 for i in range(rowCount)] for i in range(rowCount)];
+    matrix = [["" for i in range(rowCount)] for i in range(rowCount)];
     for i in range(rowCount):
         elements = rows[i].split(" ");
         for j in range(rowCount):
-            matrix[i][j] = int(elements[j]);
+            matrix[i][j] = (elements[j]);
+    return matrix;
+
+def parseIntMatrix(string):
+    matrix = parseMatrix(string);
+    n = len(matrix);
+    for i in range(n):
+        for j in range(n):
+            matrix[i][j] = int(matrix[i][j]);
     return matrix;
 
 def matrixToString(matrix):
@@ -38,7 +46,7 @@ def nmatrixToString(nmatrix):
 #return: 2d int array adjacency matrix
 def getMatrixFromFile(filename):
     fd = open(filename, 'r');
-    matrix = parseMatrix(fd.read());
+    matrix = parseIntMatrix(fd.read());
     fd.close();
     return matrix;
 
@@ -58,6 +66,9 @@ def generateIsomorphismDefinition(n):
     definition = list(range(n));
     random.shuffle(definition);
     return definition;
+
+def generateIsomorphismDefinitionMatrix(n):
+    return getIsomorphismDefinitionMatrix(generateIsomorphismDefinition(n));
 
 #args: array that represents the isomorphism such that [2, 1, 0] means node 0 now maps to 2
 #return: matrix form of the isomorphism
@@ -211,5 +222,5 @@ def roundTest():
 # print "Isomorphism tests";
 # getIsomorphismTest();
 # print "Round tests";
-# roundTest();
+roundTest();
 
