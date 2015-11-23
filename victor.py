@@ -42,9 +42,6 @@ matrix = getMatrixFromFile(sys.argv[2]);
 ############################## ROUND ONE ##############################
 data = conn.recv(1024) #recv(hashed, randomones)
 dataParts = data.split('$')
-print dataParts[0]
-print dataParts[1]
-print dataParts[2]
 if 'ROUND-ONE' not in dataParts[0]:
 	print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
 	exit()

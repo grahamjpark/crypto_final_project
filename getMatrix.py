@@ -206,10 +206,10 @@ def roundTest():
     print matrixToString(matrix);
     print matrixToString(numpy.matrix(matrix));
 
-print "Matrix tests";
-getMatrixTest();
-print "Isomorphism tests";
-getIsomorphismTest();
-print "Round tests";
-roundTest();
+# print "Matrix tests";
+# getMatrixTest();
+# print "Isomorphism tests";
+# getIsomorphismTest();
+# print "Round tests";
+# roundTest();
 
