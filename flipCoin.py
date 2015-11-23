@@ -33,7 +33,7 @@ def flipCoin():
 	__bit = getBitFromRandom(rand)
 	global __flipped
 	__flipped = 1
-	print 'Coin fliped. Variables set'
+	#print 'Coin fliped. Variables set'
 
 def getRandom():
 	if __flipped:
@@ -80,14 +80,14 @@ def serverFlip(conn):
 	toSend = 'COINFLIP-PROCESS\nRANDOM-NUMBER\n' + str(getRandom())
 	conn.sendall(toSend)
 
-	print 'Bit from random number: ' + str(getBitFromRandom(getRandom()))
+	#print 'Bit from random number: ' + str(getBitFromRandom(getRandom()))
 	challenge = -1
 	if getBitFromRandom(getRandom()) == bitGuess:
 		challenge = 1
 	else:
 		challenge = 0
 
-	print 'Challenge: ' + str(challenge)
+	#print 'Challenge: ' + str(challenge)
 
 	return challenge
 
@@ -110,11 +110,11 @@ def clientFlip(s):
 
 	if 'COINFLIP-PROCESS' in dataParts[0] and 'HASH' in dataParts[1]:
 	    setHash(dataParts[2])
-	    print 'Recieved Hash'
+	    #print 'Recieved Hash'
 
 	toSend = 'COINFLIP-PROCESS\nBIT-GUESS\n' + str(getCommitBit())
 	s.sendall(toSend)
-	print 'Sent Guess of: ' + str(getCommitBit())
+	#print 'Sent Guess of: ' + str(getCommitBit())
 
 	data = s.recv(1024)
 	dataParts = data.split('\n')
@@ -123,7 +123,7 @@ def clientFlip(s):
 	if 'COINFLIP-PROCESS' in dataParts[0] and 'RANDOM-NUMBER' in dataParts[1]:
 	    random = dataParts[2]
 	    if not checkHash(random):
-	        print 'Wat, the hashes didn\'t match, pls'
+	        #print 'Wat, the hashes didn\'t match, pls'
 	        exit()
 
 	challenge = -1
@@ -133,6 +133,6 @@ def clientFlip(s):
 	else:
 	    challenge = 0
 
-	print 'Challenge: ' + str(challenge)
+	#print 'Challenge: ' + str(challenge)
 
 	return challenge

@@ -14,13 +14,28 @@ from flipCoin import *
 from getMatrix import *
 from matrixOperations import *
 
+def doneHere(conn):
+	############################## SERVER STUFF ##############################
+	# Waits for client to close first
+	while True:
+	     
+	    #Receiving from client
+	    data = conn.recv(1024)
+	    if not data: 
+	        break
+	 
+	#came out of loop
+	conn.close()
+	s.close()
+	exit()
+
 def attemptZPK():
 	############################## ROUND ONE ##############################
 	data = conn.recv(4096) #recv(hashed, randomones)
 	dataParts = data.split('$')
 	if 'ROUND-ONE' not in dataParts[0]:
 		print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
-		exit()
+		doneHere(conn)
 	hashed = parseMatrix(dataParts[1])
 	randomones = parseMatrix(dataParts[2])
 
@@ -38,7 +53,7 @@ def attemptZPK():
 
 	if 'ROUND-TWO' not in dataParts[0]:
 		print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
-		exit()
+		doneHere(conn)
 
 	if coinFlip == 0:
 		alpha = parseIntMatrix(dataParts[1])
@@ -53,7 +68,7 @@ def attemptZPK():
 
 	if 'ROUND-THREE' not in dataParts[0]:
 		print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
-		exit()
+		doneHere(conn)
 
 	randomtwos = parseMatrix(dataParts[1])
 
@@ -64,9 +79,21 @@ def attemptZPK():
 	else:
 		result = victorRound(submatrix, matrix, alpha, q, hashed, randomones, randomtwos, coinFlip);
 
+	#if you want to see what happens when it's false
+	# result = False; 
+
 	toSend = 'RESULT\n' + str(result)
 	conn.send(toSend)
-	print result
+	if not result:
+		print 'Peggy failed a test, reported failure to Peggy and exiting'
+		doneHere(conn)
+
+if '-help' in sys.argv[1]:
+	print 'This file runs Victor (as a server), who is the Verifier in our ZPK'
+	print 'Args are as follow: G1 text file, G2 text file, a port number Peggy and Victor should use, and number of rounds'
+	print 'For example:'
+	print 'python victor.py data/gone02.txt data/input02.txt 12370 100'
+	doneHere(conn)
 
 ############################## SERVER STUFF ##############################
 HOST = ''   # Symbolic name meaning all available interfaces
@@ -88,25 +115,15 @@ conn, addr = s.accept()
 print 'Connected with ' + addr[0] + ':' + str(addr[1])
 ##########################################################################
 
-
 #Read in from files
 submatrix = getMatrixFromFile(sys.argv[1]);
 matrix = getMatrixFromFile(sys.argv[2]);
+NUM_TESTS = int(sys.argv[4])
+toSend = 'NUMBER-OF-TESTS\n' + str(NUM_TESTS)
+conn.send(toSend)
 
-for i in range(10):
-	print 'TRYING'
+print 'Making Peggy prove using ' + str(NUM_TESTS) + ' round(s)'
+for i in range(NUM_TESTS):
 	attemptZPK()
-
-############################## SERVER STUFF ##############################
-# Waits for client to close first
-while True:
-     
-    #Receiving from client
-    data = conn.recv(1024)
-    if not data: 
-        break
- 
-#came out of loop
-conn.close()
-
-s.close()
+print 'All tests passed.'
+doneHere(conn)
