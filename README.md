@@ -32,7 +32,15 @@ CS 355 Final Project
 ##Running the code
 
   Server<br />
-    python victor.py data/gone05.txt data/gtwo05.txt <PORT>
+    Generating failure<br />
+     - python victor.py data/gone07.txt data/gtwo07.txt PORT NUM_TESTS <br />
+    Generating success<br />
+     - python victor.py data/gone05.txt data/gtwo05.txt PORT NUM_TESTS
+
     
   Client<br />
-    python peggy.py data/gone05.txt data/gtwo05.txt data/beta05.txt <PORT>
+    Generating failure<br />
+     - python peggy.py data/gone07.txt data/gtwo07.txt data/beta07.txt PORT NUM_TESTS<br />
+    Generating success<br />
+     - python peggy.py data/gone05.txt data/gtwo05.txt data/beta05.txt PORT NUM_TESTS
+     
