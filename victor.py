@@ -14,6 +14,60 @@ from flipCoin import *
 from getMatrix import *
 from matrixOperations import *
 
+def attemptZPK():
+	############################## ROUND ONE ##############################
+	data = conn.recv(4096) #recv(hashed, randomones)
+	dataParts = data.split('$')
+	if 'ROUND-ONE' not in dataParts[0]:
+		print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
+		exit()
+	hashed = parseMatrix(dataParts[1])
+	randomones = parseMatrix(dataParts[2])
+
+	############################## COIN FLIP ##############################
+	coinFlip = serverFlip(conn)
+
+	############################## ROUND TWO ##############################
+	data = conn.recv(4096) # if 0 recv(alpha, q), else recv(pi, qprime)
+	dataParts = data.split('$')
+
+	alpha = numpy.random.rand(0,0)
+	q = numpy.random.rand(0,0)
+	pi = numpy.random.rand(0,0)
+	qprime = numpy.random.rand(0,0)
+
+	if 'ROUND-TWO' not in dataParts[0]:
+		print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
+		exit()
+
+	if coinFlip == 0:
+		alpha = parseIntMatrix(dataParts[1])
+		q = numpy.matrix(parseIntMatrix(dataParts[2]))
+	else:
+		pi = parseIntMatrix(dataParts[1])
+		qprime = numpy.matrix(parseIntMatrix(dataParts[2]))
+
+	############################## ROUND THREE ##############################
+	data = conn.recv(4096)  #recv(randomtwos)
+	dataParts = data.split('$')
+
+	if 'ROUND-THREE' not in dataParts[0]:
+		print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
+		exit()
+
+	randomtwos = parseMatrix(dataParts[1])
+
+	result = False
+
+	if coinFlip == 1:
+		result = victorRound(submatrix, matrix, pi, qprime, hashed, randomones, randomtwos, coinFlip);
+	else:
+		result = victorRound(submatrix, matrix, alpha, q, hashed, randomones, randomtwos, coinFlip);
+
+	toSend = 'RESULT\n' + str(result)
+	conn.send(toSend)
+	print result
+
 ############################## SERVER STUFF ##############################
 HOST = ''   # Symbolic name meaning all available interfaces
 PORT = int(sys.argv[3]) # Arbitrary non-privileged port
@@ -39,63 +93,9 @@ print 'Connected with ' + addr[0] + ':' + str(addr[1])
 submatrix = getMatrixFromFile(sys.argv[1]);
 matrix = getMatrixFromFile(sys.argv[2]);
 
-############################## ROUND ONE ##############################
-data = conn.recv(4096) #recv(hashed, randomones)
-dataParts = data.split('$')
-if 'ROUND-ONE' not in dataParts[0]:
-	print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
-	exit()
-hashed = parseMatrix(dataParts[1])
-randomones = parseMatrix(dataParts[2])
-
-############################## COIN FLIP ##############################
-coinFlip = serverFlip(conn)
-
-############################## ROUND TWO ##############################
-data = conn.recv(4096) # if 0 recv(alpha, q), else recv(pi, qprime)
-dataParts = data.split('$')
-
-alpha = numpy.random.rand(0,0)
-q = numpy.random.rand(0,0)
-pi = numpy.random.rand(0,0)
-qprime = numpy.random.rand(0,0)
-
-if 'ROUND-TWO' not in dataParts[0]:
-	print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
-	exit()
-
-if coinFlip == 0:
-	alpha = parseIntMatrix(dataParts[1])
-	q = numpy.matrix(parseIntMatrix(dataParts[2]))
-else:
-	pi = parseIntMatrix(dataParts[1])
-	qprime = numpy.matrix(parseIntMatrix(dataParts[2]))
-
-############################## ROUND THREE ##############################
-data = conn.recv(4096)  #recv(randomtwos)
-dataParts = data.split('$')
-
-if 'ROUND-THREE' not in dataParts[0]:
-	print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
-	exit()
-
-randomtwos = parseMatrix(dataParts[1])
-
-print 'Lengths of submatrix, matrix, pi, alpha, q, qprime, hashed, randomones, randomtwos, coinFlip'
-print  len(submatrix)
-print len(matrix)
-print len(pi)
-print len(alpha)
-print len(q)
-print len(qprime)
-print len(hashed)
-print len(randomtwos)
-print len(randomones)
-
-if coinFlip == 1:
-	victorRound(submatrix, matrix, pi, qprime, hashed, randomones, randomtwos, coinFlip);
-else:
-	victorRound(submatrix, matrix, alpha, q, hashed, randomones, randomtwos, coinFlip);
+for i in range(10):
+	print 'TRYING'
+	attemptZPK()
 
 ############################## SERVER STUFF ##############################
 # Waits for client to close first
