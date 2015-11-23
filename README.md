@@ -1,6 +1,12 @@
 #Zero Knowledge Proof through Subgraph Isomorphism 
 CS 355 Final Project
 
+## Team Members
+&nbsp;&nbsp;Abhijay Gupta<br />
+&nbsp;&nbsp;Graham Park<br />
+&nbsp;&nbsp;John Du<br />
+&nbsp;&nbsp;Pranav Punjabi<br />
+
 ##Things to Get Done
 - [x] Set up python stuff
 - [x] Set up sockets
