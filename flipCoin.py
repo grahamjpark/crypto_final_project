@@ -63,6 +63,7 @@ def getBitFromRandom(random):
 
 
 def serverFlip(conn):
+	# print 'Begin Server Flip'
 	#Flips the coin and sends the resulting hash to client    
 	flipCoin()
 	toSend = 'COINFLIP-PROCESS\nHASH\n' + getHash()
@@ -87,7 +88,7 @@ def serverFlip(conn):
 	else:
 		challenge = 0
 
-	#print 'Challenge: ' + str(challenge)
+	# print 'Challenge: ' + str(challenge)
 
 	return challenge
 
@@ -105,6 +106,7 @@ def checkHash(random):
     return tempHash == getHash()
 
 def clientFlip(s):
+	# print 'Begin Client Flip'
 	data = s.recv(1024)
 	dataParts = data.split('\n')
 
@@ -133,6 +135,6 @@ def clientFlip(s):
 	else:
 	    challenge = 0
 
-	#print 'Challenge: ' + str(challenge)
+	# print 'Challenge: ' + str(challenge)
 
 	return challenge

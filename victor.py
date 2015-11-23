@@ -15,85 +15,118 @@ from getMatrix import *
 from matrixOperations import *
 
 def doneHere(conn):
-	############################## SERVER STUFF ##############################
-	# Waits for client to close first
-	while True:
-	     
-	    #Receiving from client
-	    data = conn.recv(1024)
-	    if not data: 
-	        break
-	 
-	#came out of loop
-	conn.close()
-	s.close()
-	exit()
+    ############################## SERVER STUFF ##############################
+    # Waits for client to close first
+    while True:
+         
+        #Receiving from client
+        data = conn.recv(1024)
+        if not data: 
+            break
+     
+    #came out of loop
+    conn.close()
+    s.close()
+    exit()
 
 def attemptZPK():
-	############################## ROUND ONE ##############################
-	data = conn.recv(4096) #recv(hashed, randomones)
-	dataParts = data.split('$')
-	if 'ROUND-ONE' not in dataParts[0]:
-		print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
-		doneHere(conn)
-	hashed = parseMatrix(dataParts[1])
-	randomones = parseMatrix(dataParts[2])
+    ############################## ROUND ONE ##############################
+    conn.recv(2)
+    size = int(conn.recv(16))
+    data = ''
+    while size > len(data):
+        recvd = conn.recv(1024)
+        if not recvd: 
+            break
+        data += recvd
+    conn.sendall('ok')
+    dataParts = data.split('$')
+    if 'ROUND-ONE' not in dataParts[0]:
+        print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
+        print 'Had: ' + dataParts[0]
+        print 'Expected: ROUND-ONE'
+        exit()
+    hashed = parseMatrix(dataParts[1])
+    randomones = parseMatrix(dataParts[2])
 
-	############################## COIN FLIP ##############################
-	coinFlip = serverFlip(conn)
+    ############################## COIN FLIP ##############################
+    coinFlip = serverFlip(conn)
 
-	############################## ROUND TWO ##############################
-	data = conn.recv(4096) # if 0 recv(alpha, q), else recv(pi, qprime)
-	dataParts = data.split('$')
+    ############################## ROUND TWO ##############################
+    # if 0 recv(alpha, q), else recv(pi, qprime)
+    conn.recv(2)
+    size = int(conn.recv(16))
+    data = ''
+    while size > len(data):
+        recvd = conn.recv(1024)
+        if not recvd: 
+            break
+        data += recvd
+    conn.sendall('ok')
 
-	alpha = numpy.random.rand(0,0)
-	q = numpy.random.rand(0,0)
-	pi = numpy.random.rand(0,0)
-	qprime = numpy.random.rand(0,0)
+    dataParts = data.split('$')
 
-	if 'ROUND-TWO' not in dataParts[0]:
-		print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
-		doneHere(conn)
+    alpha = numpy.random.rand(0,0)
+    q = numpy.random.rand(0,0)
+    pi = numpy.random.rand(0,0)
+    qprime = numpy.random.rand(0,0)
 
-	if coinFlip == 0:
-		alpha = parseIntMatrix(dataParts[1])
-		q = numpy.matrix(parseIntMatrix(dataParts[2]))
-	else:
-		pi = parseIntMatrix(dataParts[1])
-		qprime = numpy.matrix(parseIntMatrix(dataParts[2]))
+    if 'ROUND-TWO' not in dataParts[0]:
+        print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
+        print 'Had: ' + dataParts[0]
+        print 'Expected: ROUND-TWO'
+        exit()
 
-	############################## ROUND THREE ##############################
-	data = conn.recv(4096)  #recv(randomtwos)
-	dataParts = data.split('$')
+    if coinFlip == 0:
+        alpha = parseIntMatrix(dataParts[1])
+        q = numpy.matrix(parseIntMatrix(dataParts[2]))
+    else:
+        pi = parseIntMatrix(dataParts[1])
+        qprime = numpy.matrix(parseIntMatrix(dataParts[2]))
 
-	if 'ROUND-THREE' not in dataParts[0]:
-		print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
-		doneHere(conn)
+    ############################## ROUND THREE #############################
+    #recv(randomtwos)
+    conn.recv(2)
+    size = int(conn.recv(16))
+    data = ''
+    while size > len(data):
+        recvd = conn.recv(1024)
+        if not recvd: 
+            break
+        data += recvd
+    conn.sendall('ok')
+    dataParts = data.split('$')
 
-	randomtwos = parseMatrix(dataParts[1])
+    if 'ROUND-THREE' not in dataParts[0]:
+        print 'THINGS ARE OUT OF ORDER OR DON\'T HAVE PROPER HEADERS I DONE GOOFED OH NO PANIC'
+        print 'Had: ' + dataParts[0]
+        print 'Expected: ROUND-THREE'
+        exit()
 
-	result = False
+    randomtwos = parseMatrix(dataParts[1])
 
-	if coinFlip == 1:
-		result = victorRound(submatrix, matrix, pi, qprime, hashed, randomones, randomtwos, coinFlip);
-	else:
-		result = victorRound(submatrix, matrix, alpha, q, hashed, randomones, randomtwos, coinFlip);
+    result = False
 
-	#if you want to see what happens when it's false
-	# result = False; 
+    if coinFlip == 1:
+        result = victorRound(submatrix, matrix, pi, qprime, hashed, randomones, randomtwos, coinFlip);
+    else:
+        result = victorRound(submatrix, matrix, alpha, q, hashed, randomones, randomtwos, coinFlip);
 
-	toSend = 'RESULT\n' + str(result)
-	conn.send(toSend)
-	if not result:
-		print 'Peggy failed a test, reported failure to Peggy and exiting'
-		doneHere(conn)
+    #if you want to see what happens when it's false
+    # result = False; 
+
+    toSend = 'RESULT\n' + str(result)
+    conn.sendall(toSend)
+    if not result:
+        print 'Peggy failed a test, reported failure to Peggy and exiting'
+        doneHere(conn)
 
 if '-help' in sys.argv[1]:
-	print 'This file runs Victor (as a server), who is the Verifier in our ZPK'
-	print 'Args are as follow: G1 text file, G2 text file, a port number Peggy and Victor should use, and number of rounds'
-	print 'For example:'
-	print 'python victor.py data/gone02.txt data/input02.txt 12370 100'
-	doneHere(conn)
+    print 'This file runs Victor (as a server), who is the Verifier in our ZPK'
+    print 'Args are as follow: G1 text file, G2 text file, a port number Peggy and Victor should use, and number of rounds'
+    print 'For example:'
+    print 'python victor.py data/gone100.txt data/gtwo100.txt 12370 100'
+    exit()
 
 ############################## SERVER STUFF ##############################
 HOST = ''   # Symbolic name meaning all available interfaces
@@ -118,12 +151,14 @@ print 'Connected with ' + addr[0] + ':' + str(addr[1])
 #Read in from files
 submatrix = getMatrixFromFile(sys.argv[1]);
 matrix = getMatrixFromFile(sys.argv[2]);
+READ_SIZE = len(matrix) * len(matrix) * 112 + 10000*50
 NUM_TESTS = int(sys.argv[4])
 toSend = 'NUMBER-OF-TESTS\n' + str(NUM_TESTS)
-conn.send(toSend)
+conn.sendall(toSend)
 
 print 'Making Peggy prove using ' + str(NUM_TESTS) + ' round(s)'
 for i in range(NUM_TESTS):
-	attemptZPK()
+    print 'Trying round'
+    attemptZPK()
 print 'All tests passed.'
 doneHere(conn)
