@@ -1,5 +1,5 @@
 #Zero Knowledge Proof through Subgraph Isomorphism 
-CS 355 Final Project
+Cryptography Final Project
 
 ## Team Members
 &nbsp;&nbsp;Abhijay Gupta<br />
